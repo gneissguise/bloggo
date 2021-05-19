@@ -1,6 +1,6 @@
 # bloggo
 
-FIXME
+Example of a Blogging Web Application in Clojure
 
 ## Prerequisites
 
