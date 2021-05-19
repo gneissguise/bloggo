@@ -5,16 +5,37 @@
 
 (defn base-page [& body]
   (html5
-   [:head [:title "Bloggo!"]]
+   [:head [:title "Bloggo!"]
+    [:link {:rel "stylesheet"
+            :href "https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+            :integrity "sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+            :crossorigin "anonymous"}]]
    [:body
-    [:h1 [:a {:href "/"} "Bloggo!"]]
-    [:a {:href "/article/new"} "New Article"]
-    body]))
+    [:div.container
+     [:nav.navbar.navbar-expand-lg.navbar-light.bg-light
+      [:a.navbar-brand {:href "/"} "Bloggo!"]
+      [:ul.nav.justify-content-end
+       [:li.nav-item
+        [:a.nav-link {:href "/article/new"} "New Article"]]
+       [:li.nav-item
+        [:a.nav-link {:href "/admin/login"} "Login"]]
+       [:li.nav-item
+        [:a.nav-item.nav-link {:href "/admin/logout"} "Logout"]]]]
+     body]]))
+
+(def preview-len 270)
+
+(defn- cut-body [body]
+  (if (> (.length body) preview-len)
+    (subs body 0 preview-len)
+    body))
 
 (defn index [articles]
   (base-page
    (for [a articles]
-     [:h2 [:a {:href (str "/article/" (:_id a))} (:title a)]])))
+     [:div
+      [:h3 [:a {:href (str "/article/" (:_id a))} (:title a)]]
+      [:p (-> a :body cut-body)]])))
 
 (defn article [a]
   (base-page
@@ -29,20 +50,25 @@
     [:post (if a
              (str "/article/" (:_id a))
              "/article")]
-    (form/label "title" "Title")
-    (form/text-field "title" (:title a))
-    (form/label "body" "Body")
-    (form/text-area "body" (:body a))
+    [:div.form-group
+     (form/label "title" "Title")
+     (form/text-field "title" {:class "form-control"} (:title a))]
+    [:div.form-group(form/label "body" "Body")
+     (form/text-area "body" {:class "form-control"} (:body a))]
     (anti-forgery-field)
-    (form/submit-button "Save"))))
+    (form/submit-button {:class "btn btn-primary"} "Save"))))
 
-(defn admin-login []
+(defn admin-login [& [msg]]
   (base-page
+   (when msg
+     [:div.alert.alert-danger msg])
    (form/form-to
     [:post "/admin/login"]
-    (form/label "login" "Login")
-    (form/text-field "login")
-    (form/label "password" "Password")
-    (form/password-field "password")
+    [:div.form-group
+     (form/label "login" "Login")
+     (form/text-field {:class "form-control"} "login")]
+    [:div.form-group
+     (form/label "password" "Password")
+     (form/password-field {:class "form-control"} "password")]
     (anti-forgery-field)
-    (form/submit-button "Login"))))
+    (form/submit-button {:class "btn btn-primary"} "Login"))))

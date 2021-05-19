@@ -20,7 +20,7 @@
         (if (admin/check-login login password)
           (-> (resp/redirect "/")
               (assoc-in [:session :admin] true))
-          (pages/admin-login)))
+          (pages/admin-login "Invalid username or password")))
   (GET "/admin/logout" []
        (-> (resp/redirect "/")
            (assoc-in [:session :admin] false)))
