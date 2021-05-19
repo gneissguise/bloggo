@@ -6,6 +6,7 @@
                  [compojure "1.6.1"]
                  [ring/ring-defaults "0.3.2"]
                  [com.novemberain/monger "3.1.0"]
+                 [markdown-clj "1.0.5"]
                  [hiccup "1.0.5"]]
   :plugins [[lein-ring "0.12.5"]]
   :ring {:handler bloggo.handler/app}

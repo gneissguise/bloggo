@@ -1,6 +1,7 @@
 (ns bloggo.pages
   (:require [hiccup.page :refer [html5]]
             [hiccup.form :as form]
+            [markdown.core :as md]
             [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
 (defn base-page [& body]
@@ -35,7 +36,7 @@
    (for [a articles]
      [:article {:style "min-height:150px;"}
       [:h3 [:a {:href (str "/article/" (:_id a))} (:title a)]]
-      [:p (-> a :body cut-body)]])))
+      [:p (-> a :body cut-body md/md-to-html-string)]])))
 
 (defn article [a]
   (base-page
@@ -43,7 +44,7 @@
     [:h2 (:title a)]
     [:small (:created a)]
     [:hr]
-    [:p (:body a)]]
+    [:p (-> a :body md/md-to-html-string)]]
    (form/form-to
     [:delete (str "/article/" (:_id a) "/delete")]
     (anti-forgery-field)
