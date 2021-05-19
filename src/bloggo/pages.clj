@@ -39,7 +39,11 @@
 
 (defn article [a]
   (base-page
-   [:a {:href (str "/article/" (:_id a) "/edit")} "Edit Article"]
+   (form/form-to
+    [:delete (str "/article/" (:_id a) "/delete")]
+    (anti-forgery-field)
+    [:a.btn.btn-primary {:href (str "/article/" (:_id a) "/edit")} "Edit Article"]
+    (form/submit-button {:class "btn btn-danger"} "Delete"))
    [:small (:created a)]
    [:h1 (:title a)]
    [:p (:body a)]))

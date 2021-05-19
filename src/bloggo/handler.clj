@@ -33,6 +33,9 @@
             (resp/redirect "/")))
   (GET "/article/:artid/edit" [artid] (pages/edit-article
                                        (db/get-article-by-id artid)))
+  (DELETE "/article/:artid" [artid]
+          (do (db/delete-article artid)
+              (resp/redirect "/")))
   (POST "/article/:artid" [artid title body]
         (do (db/update-article artid title body)
             (resp/redirect (str "/article/" artid)))))

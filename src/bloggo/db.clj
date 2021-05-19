@@ -25,6 +25,9 @@
               {:title title
               :body body}}))
 
+(defn delete-article [artid]
+  (mc/remove-by-id db articles (ObjectId. artid)))
+
 
 (defn list-articles []
   (mc/find-maps db articles))
