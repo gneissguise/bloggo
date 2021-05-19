@@ -33,20 +33,22 @@
 (defn index [articles]
   (base-page
    (for [a articles]
-     [:div
+     [:article {:style "min-height:150px;"}
       [:h3 [:a {:href (str "/article/" (:_id a))} (:title a)]]
       [:p (-> a :body cut-body)]])))
 
 (defn article [a]
   (base-page
+   [:article {:style "min-height:400px;"}
+    [:h2 (:title a)]
+    [:small (:created a)]
+    [:hr]
+    [:p (:body a)]]
    (form/form-to
     [:delete (str "/article/" (:_id a) "/delete")]
     (anti-forgery-field)
     [:a.btn.btn-primary {:href (str "/article/" (:_id a) "/edit")} "Edit Article"]
-    (form/submit-button {:class "btn btn-danger"} "Delete"))
-   [:small (:created a)]
-   [:h1 (:title a)]
-   [:p (:body a)]))
+    (form/submit-button {:class "btn btn-danger"} "Delete"))))
 
 (defn edit-article [a]
   (base-page
@@ -56,9 +58,9 @@
              "/article")]
     [:div.form-group
      (form/label "title" "Title")
-     (form/text-field "title" {:class "form-control"} (:title a))]
+     (form/text-field {:class "form-control"} "title" (:title a))]
     [:div.form-group(form/label "body" "Body")
-     (form/text-area "body" {:class "form-control"} (:body a))]
+     (form/text-area {:class "form-control" :rows "25"} "body" (:body a))]
     (anti-forgery-field)
     (form/submit-button {:class "btn btn-primary"} "Save"))))
 
