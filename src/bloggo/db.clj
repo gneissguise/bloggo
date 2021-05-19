@@ -1,5 +1,6 @@
 (ns bloggo.db
   (:require [monger.core :as mg]
+            [monger.operators :refer [$set]]
             [monger.collection :as mc])
   (:import [org.bson.types ObjectId]))
 
@@ -17,6 +18,13 @@
              {:title title
               :body body
               :created (new java.util.Date)}))
+
+(defn update-article [artid title body]
+  (mc/update-by-id db articles (ObjectId. artid)
+             {$set
+              {:title title
+              :body body}}))
+
 
 (defn list-articles []
   (mc/find-maps db articles))
