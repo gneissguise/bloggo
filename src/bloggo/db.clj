@@ -1,6 +1,7 @@
 (ns bloggo.db
   (:require [monger.core :as mg]
-            [monger.collection :as mc]))
+            [monger.collection :as mc])
+  (:import [org.bson.types ObjectId]))
 
 (def db-connect-uri (or (System/getenv "CLJBLOGGO_MONGO_URI")
                         "mongodb://127.0.0.1/bloggo"))
@@ -17,6 +18,8 @@
               :body body
               :created (new java.util.Date)}))
 
-
 (defn list-articles []
   (mc/find-maps db articles))
+
+(defn get-article-by-id [artid]
+  (mc/find-map-by-id db articles (ObjectId. artid)))
